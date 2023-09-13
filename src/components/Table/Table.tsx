@@ -1,12 +1,24 @@
 import { useContext } from 'react';
 import FetchContext from '../../context/FetchContext';
 import { FetchType } from '../../types';
+import useFilterText from '../../hooks/useFilterText';
 
 function Table() {
   const data = useContext(FetchContext);
-  console.log(data);
+
+  const { filteredData, setValue, value } = useFilterText();
+  console.log(value);
+  const finalData = (value.length > 0) ? filteredData : data;
   return (
     <div>
+      <input
+        data-testid="name-filter"
+        type="text"
+        name="search"
+        id="search"
+        value={ value }
+        onChange={ (e) => setValue(e.target.value) }
+      />
       <table>
         <thead>
           <tr>
@@ -26,7 +38,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {data?.map((item: FetchType) => {
+          {finalData?.map((item: FetchType) => {
             const {
               name,
               climate,
