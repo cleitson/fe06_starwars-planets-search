@@ -1,24 +1,97 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import FetchContext from '../../context/FetchContext';
-import { FetchType } from '../../types';
+import { FetchType, InputFilterType } from '../../types';
 import useFilterText from '../../hooks/useFilterText';
+import useInputFilter from '../../hooks/useInputFilter';
+
+const initialFilter: InputFilterType = {
+  select: 'population',
+  option: 'maior que',
+  numberValue: 0,
+};
 
 function Table() {
   const data = useContext(FetchContext);
+  const [inputFilter, setInputFilter] = useState<InputFilterType>(initialFilter);
 
-  const { filteredData, setValue, value } = useFilterText();
-  console.log(value);
-  const finalData = (value.length > 0) ? filteredData : data;
+  const { filteredData, setInputSearch, inputSearch } = useFilterText();
+  const { selectFilter, setSelectFilter, selectData } = useInputFilter();
+
+  const listafinal = () => {
+    if (inputSearch.length > 0) {
+      return filteredData;
+    } if (selectFilter.length > 0) {
+      return selectData;
+    }
+    return data;
+  };
+  const finalData = listafinal();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement |
+  HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setInputFilter({
+      ...inputFilter,
+      [name]: value,
+    });
+  };
+  const handleClick = () => {
+    setSelectFilter([...selectFilter, inputFilter]);
+  };
+  // console.log(inputFilter);
+
   return (
     <div>
-      <input
-        data-testid="name-filter"
-        type="text"
-        name="search"
-        id="search"
-        value={ value }
-        onChange={ (e) => setValue(e.target.value) }
-      />
+      <div>
+        <input
+          data-testid="name-filter"
+          type="text"
+          name="search"
+          id="search"
+          placeholder="Digite o nome do planeta"
+          value={ inputSearch }
+          onChange={ (e) => setInputSearch(e.target.value) }
+        />
+      </div>
+      <div>
+        <select
+          name="select"
+          id="select"
+          data-testid="column-filter"
+          value={ inputFilter.select }
+          onChange={ handleChange }
+        >
+          <option value="population">population</option>
+          <option value="orbital_period">orbital_period</option>
+          <option value="diameter">diameter</option>
+          <option value="rotation_period">rotation_period</option>
+          <option value="surface_water">surface_water</option>
+        </select>
+        <select
+          name="option"
+          id="option"
+          data-testid="comparison-filter"
+          value={ inputFilter.option }
+          onChange={ handleChange }
+        >
+          <option value="maior que">maior que</option>
+          <option value="menor que">menor que</option>
+          <option value="igual a">igual a</option>
+        </select>
+        <input
+          name="numberValue"
+          type="number"
+          data-testid="value-filter"
+          value={ inputFilter.numberValue }
+          onChange={ handleChange }
+        />
+        <button
+          data-testid="button-filter"
+          onClick={ handleClick }
+        >
+          Filtrar
+        </button>
+      </div>
       <table>
         <thead>
           <tr>
