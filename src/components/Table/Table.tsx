@@ -48,7 +48,7 @@ function Table() {
           type="text"
           name="search"
           id="search"
-          placeholder="Digite o nome do planeta"
+          placeholder="Buscar por planeta"
           value={ inputSearch }
           onChange={ (e) => setInputSearch(e.target.value) }
         />
@@ -90,6 +90,11 @@ function Table() {
           onClick={ handleClick }
         >
           Filtrar
+        </button>
+        <button
+          data-testid="button-remove-filters"
+        >
+          Limpar filtro
         </button>
       </div>
       <table>
