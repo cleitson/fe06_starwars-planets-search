@@ -4,18 +4,24 @@ import { FetchType, InputFilterType } from '../../types';
 import useFilterText from '../../hooks/useFilterText';
 import useInputFilter from '../../hooks/useInputFilter';
 
-const initialFilter: InputFilterType = {
-  select: 'population',
-  option: 'maior que',
-  numberValue: 0,
-};
-
 function Table() {
-  const data = useContext(FetchContext);
-  const [inputFilter, setInputFilter] = useState<InputFilterType>(initialFilter);
+  const { selectData } = useInputFilter();
+  const {
+    fetchData,
+    setSelectFilter,
+    selectFilter,
+    selectValues,
+  } = useContext(FetchContext);
 
   const { filteredData, setInputSearch, inputSearch } = useFilterText();
-  const { selectFilter, setSelectFilter, selectData } = useInputFilter();
+
+  const initialFilter: InputFilterType = {
+    select: selectValues[0] as InputFilterType['select'],
+    option: 'maior que',
+    numberValue: 0,
+  };
+
+  const [inputFilter, setInputFilter] = useState<InputFilterType>(initialFilter);
 
   const listafinal = () => {
     if (inputSearch.length > 0) {
@@ -23,7 +29,7 @@ function Table() {
     } if (selectFilter.length > 0) {
       return selectData;
     }
-    return data;
+    return fetchData;
   };
   const finalData = listafinal();
 
@@ -37,8 +43,8 @@ function Table() {
   };
   const handleClick = () => {
     setSelectFilter([...selectFilter, inputFilter]);
+    setInputFilter(initialFilter);
   };
-  // console.log(inputFilter);
 
   return (
     <div>
@@ -61,11 +67,9 @@ function Table() {
           value={ inputFilter.select }
           onChange={ handleChange }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {selectValues.map((item) => (
+            <option key={ item } value={ item }>{item}</option>
+          ))}
         </select>
         <select
           name="option"

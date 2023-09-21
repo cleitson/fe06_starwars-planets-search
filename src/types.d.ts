@@ -20,3 +20,7 @@ export type InputFilterType = {
   option: 'maior que' | 'menor que' | 'igual a';
   numberValue: number,
 };
+
+export type SelectValueType = {
+  name: string[];
+};

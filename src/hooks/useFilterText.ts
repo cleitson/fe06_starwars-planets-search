@@ -3,14 +3,14 @@ import FetchContext from '../context/FetchContext';
 import { FetchType } from '../types';
 
 function useFilterText() {
-  const data = useContext(FetchContext);
+  const { fetchData } = useContext(FetchContext);
   const [inputSearch, setInputSearch] = useState('');
   const [filteredData, setFilteredData] = useState<FetchType[]>([]);
 
   const valueLower = inputSearch.toLowerCase();
 
   const filterData = () => {
-    const filtered = data.filter((item: FetchType) => item.name
+    const filtered = fetchData.filter((item: FetchType) => item.name
       .toLowerCase().includes(valueLower));
     setFilteredData(filtered);
   };

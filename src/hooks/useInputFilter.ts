@@ -1,18 +1,16 @@
 import { useContext, useMemo, useState } from 'react';
 import FetchContext from '../context/FetchContext';
-import { InputFilterType, FetchType } from '../types';
+import { FetchType, SelectValueType } from '../types';
 
 function useInputFilter() {
-  const data = useContext(FetchContext);
-  const [selectFilter, setSelectFilter] = useState<InputFilterType[]>([]);
+  const { fetchData, selectFilter } = useContext(FetchContext);
   const [selectData, setSelectData] = useState<FetchType[]>([]);
 
   const applyFilters = () => {
-    let filteredData = data;
+    let filteredData = fetchData;
 
     selectFilter.forEach((filter) => {
       const { select, option, numberValue } = filter;
-
       filteredData = filteredData.filter((planet) => {
         const planetValue = Number(planet[select]);
 
@@ -28,16 +26,16 @@ function useInputFilter() {
         return false;
       });
     });
-
     setSelectData(filteredData);
   };
 
-  console.log(selectData);
+  // console.log(selectFilter);
 
-  useMemo(() => applyFilters(), [selectFilter]);
+  useMemo(
+    () => applyFilters(),
+    [selectFilter],
+  );
   return {
-    selectFilter,
-    setSelectFilter,
     selectData,
   };
 }
