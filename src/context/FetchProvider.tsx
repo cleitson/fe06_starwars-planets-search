@@ -17,7 +17,6 @@ function FetchProvider({ children }: FetchProviderProps) {
   ];
   const [data, setData] = useState<FetchType[]>([]);
   const [selectFilter, setSelectFilter] = useState<InputFilterType[]>([]);
-
   const [selectValues, setSelectValues] = useState<string[]>(values);
 
   const valuesRemove = () => {

@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from 'react';
 import FetchContext from '../context/FetchContext';
-import { FetchType, SelectValueType } from '../types';
+import { FetchType } from '../types';
 
 function useInputFilter() {
   const { fetchData, selectFilter } = useContext(FetchContext);
@@ -28,8 +28,6 @@ function useInputFilter() {
     });
     setSelectData(filteredData);
   };
-
-  // console.log(selectFilter);
 
   useMemo(
     () => applyFilters(),

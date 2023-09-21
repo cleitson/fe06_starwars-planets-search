@@ -11,6 +11,7 @@ function Table() {
     setSelectFilter,
     selectFilter,
     selectValues,
+    setSelectValues,
   } = useContext(FetchContext);
 
   const { filteredData, setInputSearch, inputSearch } = useFilterText();
@@ -41,9 +42,17 @@ function Table() {
       [name]: value,
     });
   };
-  const handleClick = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setSelectFilter([...selectFilter, inputFilter]);
     setInputFilter(initialFilter);
+  };
+
+  const removeFilter = (select: InputFilterType['select']) => {
+    const newFilter = selectFilter.filter((item) => item.select !== select);
+    setSelectFilter(newFilter);
+    setSelectValues([...selectValues, select]);
+    console.log(newFilter);
   };
 
   return (
@@ -59,7 +68,7 @@ function Table() {
           onChange={ (e) => setInputSearch(e.target.value) }
         />
       </div>
-      <div>
+      <form onSubmit={ handleSubmit }>
         <select
           name="select"
           id="select"
@@ -89,17 +98,32 @@ function Table() {
           value={ inputFilter.numberValue }
           onChange={ handleChange }
         />
-        <button
-          data-testid="button-filter"
-          onClick={ handleClick }
-        >
+        <button data-testid="button-filter" type="submit">
           Filtrar
         </button>
         <button
+          type="button"
           data-testid="button-remove-filters"
+          onClick={ () => setSelectFilter([]) }
         >
           Limpar filtro
         </button>
+      </form>
+      <div>
+        {selectFilter.map((item) => (
+          <p key={ item.select } data-testid="filter">
+            {`${item.select} ${item.option} ${item.numberValue}`}
+            <label htmlFor="btnDel">
+              <button
+                id="btnDel"
+                onClick={ () => removeFilter(item.select) }
+              >
+                X
+              </button>
+            </label>
+          </p>
+
+        ))}
       </div>
       <table>
         <thead>
